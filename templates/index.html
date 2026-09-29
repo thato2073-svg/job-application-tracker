@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block content %}
+<header><p class="eyebrow">JOB SEARCH DASHBOARD</p><h1>Keep your applications organized.</h1><p class="muted">Track applications, interviews and offers without another spreadsheet.</p></header>
+<section class="stats">
+<div class="card"><span>Applications</span><strong>{{ stats.total }}</strong></div>
+<div class="card"><span>Interviews</span><strong>{{ stats.interviews }}</strong></div>
+<div class="card"><span>Offers</span><strong>{{ stats.offers }}</strong></div>
+<div class="card"><span>Response rate</span><strong>{{ "%.0f"|format(stats.response_rate) }}%</strong></div>
+</section>
+<form class="filters" method="get">
+<input name="search" value="{{ search }}" placeholder="Search company or role">
+<select name="status"><option value="">All statuses</option>{% for s in statuses %}<option {% if selected_status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+<button>Filter</button><a href="{{ url_for('index') }}">Clear</a>
+</form>
+<section class="panel">
+{% if applications %}
+<div class="table-wrap"><table><thead><tr><th>Company</th><th>Role</th><th>Status</th><th>Date</th><th>Location</th><th></th></tr></thead>
+<tbody>{% for a in applications %}<tr>
+<td><strong>{{ a.company }}</strong></td><td>{{ a.role }}</td><td><span class="status {{ a.status|lower }}">{{ a.status }}</span></td>
+<td>{{ a.date_applied }}</td><td>{{ a.location or "—" }}</td>
+<td class="actions">{% if a.job_url %}<a href="{{ a.job_url }}" target="_blank" rel="noopener">Job</a>{% endif %}<a href="{{ url_for('edit',application_id=a.id) }}">Edit</a>
+<form method="post" action="{{ url_for('delete',application_id=a.id) }}" onsubmit="return confirm('Delete this application?')"><button class="link danger">Delete</button></form></td>
+</tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="empty"><h2>No applications found</h2><p>Add your first application or change your filters.</p></div>{% endif %}
+</section>
+{% endblock %}
