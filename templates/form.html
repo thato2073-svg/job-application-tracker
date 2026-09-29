@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}{{ "Edit" if application else "Add" }} · ApplyTrack{% endblock %}
+{% block content %}<div class="form-page"><p class="eyebrow">{{ "EDIT APPLICATION" if application else "NEW APPLICATION" }}</p><h1>{{ "Update application" if application else "Add an application" }}</h1>
+<form class="application-form" method="post">
+<label>Company<input name="company" required value="{{ application.company if application else '' }}"></label>
+<label>Role<input name="role" required value="{{ application.role if application else '' }}"></label>
+<div class="grid"><label>Status<select name="status">{% for s in statuses %}<option {% if application and application.status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+<label>Date applied<input type="date" name="date_applied" required value="{{ application.date_applied if application else '' }}"></label></div>
+<label>Location<input name="location" value="{{ application.location if application else '' }}" placeholder="Edmonton, AB / Remote"></label>
+<label>Job link<input type="url" name="job_url" value="{{ application.job_url if application else '' }}"></label>
+<label>Notes<textarea name="notes" rows="5">{{ application.notes if application else '' }}</textarea></label>
+<div class="form-actions"><button class="button primary" type="submit">{{ "Save changes" if application else "Add application" }}</button><a href="{{ url_for('index') }}">Cancel</a></div>
+</form></div>{% endblock %}
